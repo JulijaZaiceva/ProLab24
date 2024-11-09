@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'upload'
 app.config['ALLOWED_EXTENSIONS'] = {'pdf'}
 
-os.environ['mykey'] = 'AIzaSyCyx9WctsiaIlbQpLQzlfMl-UjIDgbvdJM'
+os.environ['mykey'] = API KEY SEIT
 
 genai.configure(api_key=os.environ["mykey"])
 generation_config = {
