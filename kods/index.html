@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projekts CO2</title>
+</head>
+<body>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <label for="file">Izvēlies PDF failu/failus:</label>
+        <input type="file" name="files" id="file" accept=".pdf" multiple>
+        <button type="submit">Augšuplejuplādēt</button>
+    </form>
+
+{% if prices %}
+    <h2>Cenas:</h2>
+    <ul>
+        {% for key, value in prices.items() %}
+            <li><strong>{{ key }}</strong>: {{ value }}</li>
+        {% endfor %}
+    </ul>
+{% elif message %}
+    <p>{{ message }}</p>
+{% endif %}
+</body>
+</html>
