@@ -3,24 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projekts CO2</title>
+    <title>CO2 Projekts</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-        <label for="file">Izvēlies PDF failu/failus:</label>
-        <input type="file" name="files" id="file" accept=".pdf" multiple>
-        <button type="submit">Augšuplejuplādēt</button>
-    </form>
+    <header class="header">
+        <h1>Footprint Finder</h1>
+        <form action="/profile">
+            <button type="submit" class="header-button">Profils</button>
+        </form>
+        <br>
+        <form action="/logout">
+            <button type="submit" class="header-button">Iziet</button>
+        </form>
+    </header>
 
-{% if prices %}
-    <h2>Cenas:</h2>
-    <ul>
-        {% for key, value in prices.items() %}
-            <li><strong>{{ key }}</strong>: {{ value }}</li>
-        {% endfor %}
-    </ul>
-{% elif message %}
-    <p>{{ message }}</p>
-{% endif %}
+    <main class="main-container">
+        <form action="/upload" method="POST" enctype="multipart/form-data" class="upload-form">
+            <label for="file" class="file-label">Izvēlies PDF failu/failus:</label>
+            <input type="file" name="files" id="file" accept=".pdf" multiple class="file-input">
+            <button type="submit" class="upload-button">Augšupielādēt</button>
+        </form>
+
+        <!-- Всплывающее окно с содержимым -->
+        <div class="modal" id="loadingModal">
+            <div class="modal-content">
+                <p>Faili tiek augšupielādēti... Lūdzu, uzgaidiet!</p>
+            </div>
+        </div>
+
+        <section class="results-section">
+            {% if extracted_data %}
+                <h2>Dati:</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Firma</th>
+                            <th>Datums</th>
+                            <th>Produkts</th>
+                            <th>Daudzums</th>
+                            <th>Cena</th>
+                            <th>Emisija</th>
+                            <th>Fails</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for invoice in extracted_data %}
+                            <tr>
+                                <td>{{ loop.index }}</td> <!-- Номер -->
+                                <td>{{ invoice[0] }}</td>  <!-- Firma -->
+                                <td>{{ invoice[1] }}</td>  <!-- Datums -->
+                                <td>{{ invoice[2] }}</td>  <!-- Produkts -->
+                                <td>{{ invoice[3] }}</td>  <!-- Daudzums -->
+                                <td>{{ invoice[4] }}</td>  <!-- Cena -->
+                                <td>{{ invoice[5] }}</td>  <!-- Mērvienība -->
+                                <td>{{ invoice[6] }}</td>  <!-- Fails -->
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Nav datu, kas tiek parādīti.</p>
+            {% endif %}
+        </section>
+
+        <a href="/export" class="download-button">Lejupielādēt Excel Tabulu</a>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 Projekts CO2. Visas tiesības aizsargātas.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector(".upload-form");
+            const loadingModal = document.getElementById("loadingModal");
+
+            form.addEventListener("submit", (event) => {
+                const files = document.querySelector(".file-input").files;
+                if (files.length === 0) {
+                    event.preventDefault();
+                    alert("Lūdzu, izvēlieties failus augšupielādei!");
+                } else {
+                    loadingModal.style.display = "flex";
+                }
+            });
+
+            if (loadingModal) {
+                setTimeout(() => {
+                    loadingModal.style.display = "none";
+                }, 1500); // Закрытие окна через 1.5 секунды
+            }
+        });
+    </script>
 </body>
 </html>
