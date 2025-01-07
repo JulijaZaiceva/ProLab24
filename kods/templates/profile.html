@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO2 Projekts</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Footprint Finder</h1>
+        <h3>Profile</h3>
+    </header>
+
+    <main class="main-container">
+        {% if bundles %}
+                <h2>Bundles:</h2>
+                {% for bundle in bundles %}
+                <p>{{ bundle[0] }} </p>
+                <p>{{ bundle[1] }} </p>
+                <p>{{ bundle[2] }} </p>
+                <br>
+                {% endfor %}
+            {% else %}
+                <p>Nav datu, kas tiek parādīti.</p>
+            {% endif %}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 Projekts CO2. Visas tiesības aizsargātas.</p>
+    </footer>
+
+</body>
+</html>
