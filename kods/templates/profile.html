@@ -7,28 +7,64 @@
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <header class="header">
-        <h1>Footprint Finder</h1>
-        <h3>Profile</h3>
-    </header>
+<header class="header">
+    <h1>Footprint Finder</h1>
+    <h3>Profile</h3>
+    <form action="/">
+        <button type="submit" class="header-button">Atgriezties</button>
+    </form>
+    <br>
+    <form action="/logout">
+        <button type="submit" class="header-button">Iziet</button>
+    </form>
+</header>
 
-    <main class="main-container">
-        {% if bundles %}
-                <h2>Bundles:</h2>
-                {% for bundle in bundles %}
-                <p>{{ bundle[0] }} </p>
-                <p>{{ bundle[1] }} </p>
-                <p>{{ bundle[2] }} </p>
-                <br>
-                {% endfor %}
-            {% else %}
-                <p>Nav datu, kas tiek parādīti.</p>
-            {% endif %}
-    </main>
+<main class="main-container">
+    <h2>Vēsture:</h2>
+    {% if extracted_data %}
+    {% for bundle in extracted_data %}
+    <h3>{{bundle.timestamp}} </h3>
+    <a href="/export?bundle_id={{ bundle.bundle_id }}" class="download-button">Lejupielādēt Excel Tabulu</a>
+    <section class="results-section">
+        <table>
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Firma</th>
+                <th>Datums</th>
+                <th>Produkts</th>
+                <th>Daudzums</th>
+                <th>Cena</th>
+                <th>Emisija</th>
+                <th>Fails</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Loop through each invoice in the bundle -->
+            {% for invoice in bundle.invoices %}
+            <tr>
+                <td>{{ loop.index }}</td> <!-- Invoice number -->
+                <td>{{ invoice.firma }}</td>  <!-- Firma -->
+                <td>{{ invoice.datums }}</td>  <!-- Datums -->
+                <td>{{ invoice.produkts }}</td>  <!-- Produkts -->
+                <td>{{ invoice.daudzums }}</td>  <!-- Daudzums -->
+                <td>{{ invoice.cena }}</td>  <!-- Cena -->
+                <td>{{ invoice.emisija }}</td>  <!-- Emisija -->
+                <td>{{ invoice.fails }}</td>  <!-- Fails -->
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    {% endfor %}
+    {% else %}
+    <p>Nav datu, kas tiek parādīti.</p>
+    {% endif %}
+</main>
 
-    <footer class="footer">
-        <p>&copy; 2024 Projekts CO2. Visas tiesības aizsargātas.</p>
-    </footer>
+<footer class="footer">
+    <p>&copy; 2024 Projekts CO2. Visas tiesības aizsargātas.</p>
+</footer>
 
 </body>
 </html>
