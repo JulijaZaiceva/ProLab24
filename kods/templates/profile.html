@@ -40,17 +40,17 @@
             </tr>
             </thead>
             <tbody>
-            <!-- Loop through each invoice in the bundle -->
+
             {% for invoice in bundle.invoices %}
             <tr>
-                <td>{{ loop.index }}</td> <!-- Invoice number -->
-                <td>{{ invoice.firma }}</td>  <!-- Firma -->
-                <td>{{ invoice.datums }}</td>  <!-- Datums -->
-                <td>{{ invoice.produkts }}</td>  <!-- Produkts -->
-                <td>{{ invoice.daudzums }}</td>  <!-- Daudzums -->
-                <td>{{ invoice.cena }}</td>  <!-- Cena -->
-                <td>{{ invoice.emisija }}</td>  <!-- Emisija -->
-                <td>{{ invoice.fails }}</td>  <!-- Fails -->
+                <td>{{ loop.index }}</td>
+                <td>{{ invoice.firma }}</td>
+                <td>{{ invoice.datums }}</td>
+                <td>{{ invoice.produkts }}</td>
+                <td>{{ invoice.daudzums }}</td>
+                <td>{{ invoice.cena }}</td>
+                <td>{{ invoice.emisija }}</td>
+                <td>{{ invoice.fails }}</td>
             </tr>
             {% endfor %}
             </tbody>

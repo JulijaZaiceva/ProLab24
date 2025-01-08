@@ -25,7 +25,6 @@
             <button type="submit" class="upload-button">Augšupielādēt</button>
         </form>
 
-        <!-- Всплывающее окно с содержимым -->
         <div class="modal" id="loadingModal">
             <div class="modal-content">
                 <p>Faili tiek augšupielādēti... Lūdzu, uzgaidiet!</p>
@@ -51,14 +50,14 @@
                     <tbody>
                         {% for invoice in extracted_data %}
                             <tr>
-                                <td>{{ loop.index }}</td> <!-- Номер -->
-                                <td>{{ invoice[0] }}</td>  <!-- Firma -->
-                                <td>{{ invoice[1] }}</td>  <!-- Datums -->
-                                <td>{{ invoice[2] }}</td>  <!-- Produkts -->
-                                <td>{{ invoice[3] }}</td>  <!-- Daudzums -->
-                                <td>{{ invoice[4] }}</td>  <!-- Cena -->
-                                <td>{{ invoice[5] }}</td>  <!-- Mērvienība -->
-                                <td>{{ invoice[6] }}</td>  <!-- Fails -->
+                                <td>{{ loop.index }}</td>
+                                <td>{{ invoice[0] }}</td>
+                                <td>{{ invoice[1] }}</td>
+                                <td>{{ invoice[2] }}</td>
+                                <td>{{ invoice[3] }}</td>
+                                <td>{{ invoice[4] }}</td>
+                                <td>{{ invoice[5] }}</td>
+                                <td>{{ invoice[6] }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
