@@ -185,7 +185,7 @@ def export_to_excel():
             os.makedirs(app.config['DOWNLOAD_FOLDER'])
 
         with sqlite3.connect(DATABASE) as conn:
-            df = pd.read_sql_query("SELECT * FROM invoices where bundle_id = ?", conn, params=(session.get("bundle_id"),))
+            df = pd.read_sql_query("SELECT id, firma, datums, produkts, daudzums, cena, emisija, fails FROM invoices where bundle_id = ?", conn, params=(session.get("bundle_id"),))
 
 
         output = BytesIO()
