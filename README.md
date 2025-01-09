@@ -7,4 +7,4 @@ Kā palaist projektu:
 3. Lietojot cmd, nokļut līdz mapei, kur atrods lejulādēts app.py
 4. Palaist komandu pip3 install -r requirements.txt
 5. Palais app.py ar komandu python3 app.py
-6. Lejuplādēt mapi
+6. Lejuplādēt mapi 'Latvija' no repozitorija ar PDF rēķiniem, lai pārbaudītu programmas darbību
