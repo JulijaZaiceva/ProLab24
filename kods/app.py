@@ -27,7 +27,7 @@ app.config['DOWNLOAD_FOLDER'] = 'DataBase_downloaded'
 app.config['ALLOWED_EXTENSIONS'] = {'pdf'}
 app.secret_key = os.urandom(24)
 # atslēga
-os.environ['mykey'] = "AIzaSyA6knNFBTeR05Sr1VM82uve4jrj0qPapRc"
+os.environ['mykey'] = "key"
 genai.configure(api_key=os.environ["mykey"])
 generation_config = {
     "temperature": 1,
