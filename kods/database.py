@@ -34,9 +34,9 @@ def init_db():
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS invoices (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            firma TEXT NOT NULL,
-            datums TEXT NOT NULL,
-            produkts TEXT NOT NULL,
+            firma TEXT DEFAULT 'Nezināma Firma',
+            datums TEXT DEFAULT 'Nezināms datums',
+            produkts TEXT DEFAULT 'Nezināms Produkts',
             daudzums TEXT,
             cena TEXT,
             emisija FLOAT,

@@ -13,13 +13,21 @@ from types import SimpleNamespace
 from database import init_db, save_to_db, fetch_from_db, save_user, find_user, import_emissions, create_bundle,fetch_user_bundles
 import xlsxwriter
 
+
+def safe_getattr(obj, attribute, default_value, expected_type):
+    """Pārbauda, vai atributs eksiste un vai tam ir pareizais datu tips. Ja nav, atgriez defaulyt vērtību."""
+    value = getattr(obj, attribute, default_value)
+    if value is None or not isinstance(value, expected_type):
+        return default_value
+    return value
+
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'upload'
 app.config['DOWNLOAD_FOLDER'] = 'DataBase_downloaded'
 app.config['ALLOWED_EXTENSIONS'] = {'pdf'}
 app.secret_key = os.urandom(24)
 # atslēga
-os.environ['mykey'] = "key" 
+os.environ['mykey'] = "AIzaSyA6knNFBTeR05Sr1VM82uve4jrj0qPapRc"
 genai.configure(api_key=os.environ["mykey"])
 generation_config = {
     "temperature": 1,
@@ -73,8 +81,8 @@ def upload_file():
                 result = model.generate_content([ 
                     myfile,
                     "\n\nAtrodi datus no rēķina"
-                    "(Tikai datumu date, kompāniju company, produktu name, daudzumu quantity, cenu price un 2 paplidus parametrus,"
-                    " kas nav dokumentā un kurus vajag saskitīt - typeid un correcyQuantity.)"
+                    "(Tikai datumu date, kompāniju company, produktu name, daudzumu quantity, cenu price(ja kāds no datiem nav dokumentā, tad rakstīt Nezināms) un 2 paplidus parametrus,"
+                    " kas nav dokumentā un kurus vajag saskitīt - typeid un correctQuantity.)"
                     " un atdod tos JSON formātā bez paskaidrojumiem vai papildus teksta.\n\n"
                     "Atbildi sniedz vienā līmenī, kur katrs ieraksts ir JSON objekts, kas atrodās json massīvā, piemēram:\n"
                     "[{"
@@ -84,7 +92,7 @@ def upload_file():
                  "\"quantity\": daudzums,"
                  "\"price\": cena,"
                  "\"typeid\": typeid no pielikta tālāk JSON,"
-                 "\"correctQuantity\": daudzums mervenībā no pielikat tālāk Json (ja jsonā ir mērvieniba 1 kg, bet failā 1 tona, tad jākonvertē daudzumu, kas rakstīts failā uz mērvienību, kas rakstīts JSON)"
+                 "\"correctQuantity\": daudzums mervenībā no tālāk pieliktā Json (ja jsonā ir mērvieniba 1 kg, bet failā 1 tona, tad jākonvertē daudzumu, kas rakstīts failā uz mērvienību, kas rakstīts JSON)"
                  "}] Rekur json: "+ jsonData +
                     "\n"
                     "date parametris ir string"
@@ -96,22 +104,31 @@ def upload_file():
                     "correctQuantity ir float"
                     "\n"
                 ])
+            
             outputJson = result.text.replace("json", "").replace("`", "").replace("\t", "").replace("\n", "")
-
+            print(result.text)
             output = json.loads(outputJson, object_hook=lambda d: SimpleNamespace(**d))
             for itemInOutput in output:
-                itemEmissionByUnit = [item for item in list_of_dicts if item['type_id'] == itemInOutput.typeid][0]['value']
-                itemEmission = itemEmissionByUnit * itemInOutput.correctQuantity
+                company = safe_getattr(itemInOutput, "company", "Nezināms", str)
+                date = safe_getattr(itemInOutput, "date", "Nezināms ", str)
+                name = safe_getattr(itemInOutput, "name", "Nezināms ", str)
+                quantity = safe_getattr(itemInOutput, "quantity", "Nezināms", (float, int,str))
+                price = safe_getattr(itemInOutput, "price", "Nezināms", (float, int, str))
+                typeid = safe_getattr(itemInOutput, "typeid", 1, int)
+                correctQuantity = safe_getattr(itemInOutput, "correctQuantity", 0.0, (float, int))
+                itemEmissionByUnit = [item for item in list_of_dicts if item['type_id'] == typeid][0]['value']
+                itemEmission = itemEmissionByUnit * correctQuantity
+
                 all_data.append((
-                                itemInOutput.company,
-                                itemInOutput.date,
-                                itemInOutput.name,
-                                itemInOutput.quantity,
-                                itemInOutput.price,
-                                itemEmission,
-                                filename,
-                                session['bundle_id']
-                            ))
+                    company,
+                    date,
+                    name,
+                    quantity,
+                    price,
+                    itemEmission,
+                    filename,
+                    session['bundle_id']
+                ))
 
     if all_data:
         save_to_db(all_data)
